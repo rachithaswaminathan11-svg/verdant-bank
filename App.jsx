@@ -1113,6 +1113,137 @@ function SMSAlerts() {
     </div>
   );
 }
+function ESGReports() {
+  const [reports, setReports] = useState([]);
+
+  useEffect(() => {
+    async function loadReports() {
+      const { data, error } = await supabase
+        .from("esg_reports")
+        .select("*")
+        .order("report_date", { ascending: false });
+
+      if (error) {
+        console.error("Error loading ESG reports:", error);
+        return;
+      }
+
+      setReports(data || []);
+    }
+
+    loadReports();
+  }, []);
+
+  const totalReports = reports.length;
+
+  const averageScore =
+    totalReports > 0
+      ? Math.round(
+          reports.reduce(
+            (sum, report) => sum + Number(report.overall_score || 0),
+            0
+          ) / totalReports
+        )
+      : 0;
+
+  return (
+    <div>
+      <div className="page-heading">
+        <div>
+          <h2>ESG Reports</h2>
+          <p>View environmental, social and governance performance reports.</p>
+        </div>
+
+        <button className="primary-button">Generate Report</button>
+      </div>
+
+      <div className="stats-grid">
+        <StatCard
+          title="Total Reports"
+          value={totalReports}
+          subtitle="reports available"
+          trend="100%"
+          icon={BarChart3}
+        />
+
+        <StatCard
+          title="Average ESG Score"
+          value={`${averageScore}/100`}
+          subtitle="overall performance"
+          trend="8.6%"
+          icon={Leaf}
+        />
+
+        <StatCard
+          title="Environmental"
+          value={
+            totalReports > 0
+              ? `${Math.round(
+                  reports.reduce(
+                    (sum, report) =>
+                      sum + Number(report.environmental_score || 0),
+                    0
+                  ) / totalReports
+                )}/100`
+              : "0/100"
+          }
+          subtitle="average score"
+          trend="11.2%"
+          icon={Factory}
+        />
+      </div>
+
+      <Card>
+        <div className="card-header">
+          <div>
+            <h3>ESG Report Records</h3>
+            <p>Latest sustainability reports from Supabase.</p>
+          </div>
+          <BarChart3 size={20} />
+        </div>
+
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Report Name</th>
+                <th>Environmental</th>
+                <th>Social</th>
+                <th>Governance</th>
+                <th>Overall</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {reports.map((report) => (
+                <tr key={report.id}>
+                  <td>
+                    <strong>{report.report_name}</strong>
+                  </td>
+
+                  <td>{report.environmental_score}</td>
+
+                  <td>{report.social_score}</td>
+
+                  <td>{report.governance_score}</td>
+
+                  <td>
+                    <span className="badge good">
+                      {report.overall_score}
+                    </span>
+                  </td>
+
+                  <td>{report.report_date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
 function Placeholder({
   title,
   description,
@@ -1224,17 +1355,13 @@ function App() {
 
       {/* ESG REPORTS */}
       <Route
-        path="/esg-reports"
-        element={
-          <Layout>
-            <Placeholder
-              title="ESG Reports"
-              description="View and generate environmental sustainability reports."
-              icon={BarChart3}
-            />
-          </Layout>
-        }
-      />
+  path="/esg-reports"
+  element={
+    <Layout>
+      <ESGReports />
+    </Layout>
+  }
+/>
 
       {/* ADMIN */}
       <Route
