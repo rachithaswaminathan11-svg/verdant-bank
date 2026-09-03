@@ -806,5 +806,4 @@ function Energy() {
                   <small>{time}</small>
                 </div>
 
-                <span
-                  className={`severity $
+                
