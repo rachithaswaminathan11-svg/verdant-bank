@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Routes,
   Route,
@@ -18,25 +18,142 @@ import {
   Settings,
   Search,
   Plus,
-  RefreshCw,
   Menu,
   X,
   Bell,
 } from "lucide-react";
 
-import { supabase } from "./lib/supabase";
-
 const branchSeed = [
-  { name: "Mumbai Fort", city: "Mumbai", region: "West", code: "MUM-001", manager: "Priya Shah", score: 78, grade: "B", co2: 12.4, kwh: 18.4, paper: 24.0, trend: -4.2 },
-  { name: "Delhi Connaught", city: "Delhi", region: "North", code: "DEL-014", manager: "Arjun Mehta", score: 64, grade: "C", co2: 18.9, kwh: 27.2, paper: 31.0, trend: 2.1 },
-  { name: "Bangalore MG Road", city: "Bangalore", region: "South", code: "BLR-007", manager: "Divya Rao", score: 91, grade: "A", co2: 8.2, kwh: 12.8, paper: 15.4, trend: -8.5 },
-  { name: "Chennai T. Nagar", city: "Chennai", region: "South", code: "CHN-022", manager: "Karthik Iyer", score: 74, grade: "B", co2: 14.1, kwh: 21.5, paper: 22.8, trend: -1.4 },
-  { name: "Kolkata Park St", city: "Kolkata", region: "East", code: "KOL-009", manager: "Riya Sen", score: 52, grade: "D", co2: 22.5, kwh: 32.0, paper: 40.2, trend: 6.8 },
-  { name: "Hyderabad Banjara", city: "Hyderabad", region: "South", code: "HYD-018", manager: "Anil Reddy", score: 86, grade: "A", co2: 10.3, kwh: 15.6, paper: 18.7, trend: -5.2 },
-  { name: "Pune Koregaon", city: "Pune", region: "West", code: "PUN-031", manager: "Sneha Kulkarni", score: 80, grade: "B", co2: 11.8, kwh: 17.3, paper: 20.1, trend: -3.1 },
-  { name: "Ahmedabad CG Rd", city: "Ahmedabad", region: "West", code: "AHM-045", manager: "Vikram Patel", score: 68, grade: "C", co2: 16.7, kwh: 24.8, paper: 28.9, trend: 1.5 },
-  { name: "Jaipur MI Road", city: "Jaipur", region: "North", code: "JAI-052", manager: "Neha Sharma", score: 72, grade: "B", co2: 13.2, kwh: 19.7, paper: 21.4, trend: -2.0 },
-  { name: "Panaji Main", city: "Panaji", region: "West", code: "GOA-061", manager: "Rohan D'Souza", score: 94, grade: "A", co2: 6.9, kwh: 10.2, paper: 12.8, trend: -11.3 },
+  {
+    name: "Mumbai Fort",
+    city: "Mumbai",
+    region: "West",
+    code: "MUM-001",
+    manager: "Priya Shah",
+    score: 78,
+    grade: "B",
+    co2: 12.4,
+    kwh: 18.4,
+    paper: 24.0,
+    trend: -4.2,
+  },
+  {
+    name: "Delhi Connaught",
+    city: "Delhi",
+    region: "North",
+    code: "DEL-014",
+    manager: "Arjun Mehta",
+    score: 64,
+    grade: "C",
+    co2: 18.9,
+    kwh: 27.2,
+    paper: 31.0,
+    trend: 2.1,
+  },
+  {
+    name: "Bangalore MG Road",
+    city: "Bangalore",
+    region: "South",
+    code: "BLR-007",
+    manager: "Divya Rao",
+    score: 91,
+    grade: "A",
+    co2: 8.2,
+    kwh: 12.8,
+    paper: 15.4,
+    trend: -8.5,
+  },
+  {
+    name: "Chennai T. Nagar",
+    city: "Chennai",
+    region: "South",
+    code: "CHN-022",
+    manager: "Karthik Iyer",
+    score: 74,
+    grade: "B",
+    co2: 14.1,
+    kwh: 21.5,
+    paper: 22.8,
+    trend: -1.4,
+  },
+  {
+    name: "Kolkata Park St",
+    city: "Kolkata",
+    region: "East",
+    code: "KOL-009",
+    manager: "Riya Sen",
+    score: 52,
+    grade: "D",
+    co2: 22.5,
+    kwh: 32.0,
+    paper: 40.2,
+    trend: 6.8,
+  },
+  {
+    name: "Hyderabad Banjara",
+    city: "Hyderabad",
+    region: "South",
+    code: "HYD-018",
+    manager: "Anil Reddy",
+    score: 86,
+    grade: "A",
+    co2: 10.3,
+    kwh: 15.6,
+    paper: 18.7,
+    trend: -5.2,
+  },
+  {
+    name: "Pune Koregaon",
+    city: "Pune",
+    region: "West",
+    code: "PUN-031",
+    manager: "Sneha Kulkarni",
+    score: 80,
+    grade: "B",
+    co2: 11.8,
+    kwh: 17.3,
+    paper: 20.1,
+    trend: -3.1,
+  },
+  {
+    name: "Ahmedabad CG Rd",
+    city: "Ahmedabad",
+    region: "West",
+    code: "AHM-045",
+    manager: "Vikram Patel",
+    score: 68,
+    grade: "C",
+    co2: 16.7,
+    kwh: 24.8,
+    paper: 28.9,
+    trend: 1.5,
+  },
+  {
+    name: "Jaipur MI Road",
+    city: "Jaipur",
+    region: "North",
+    code: "JAI-052",
+    manager: "Neha Sharma",
+    score: 72,
+    grade: "B",
+    co2: 13.2,
+    kwh: 19.7,
+    paper: 21.4,
+    trend: -2.0,
+  },
+  {
+    name: "Panaji Main",
+    city: "Panaji",
+    region: "West",
+    code: "GOA-061",
+    manager: "Rohan D'Souza",
+    score: 94,
+    grade: "A",
+    co2: 6.9,
+    kwh: 10.2,
+    paper: 12.8,
+    trend: -11.3,
+  },
 ];
 
 const nav = [
@@ -801,28 +918,4 @@ function Energy() {
               <b>Bank-wide daily consumption</b>
               <span>
                 Last 30 days · target 7,000 kWh/day
-              </span>
-            </div>
-          </div>
-
-          <div className="energy-visual">
-            {Array.from({ length: 30 }, (_, index) => (
-              <i
-                key={index}
-                style={{
-                  height: `${35 + ((index * 17) % 55)}%`,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="card">
-          {/* Energy anomaly content goes here */}
-        </div>
-      </div>
-    </div>
-  );
-}
-export default App
- 
+    [
