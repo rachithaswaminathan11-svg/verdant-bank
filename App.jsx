@@ -824,4 +824,5 @@ function Energy() {
     </div>
   );
 }
+export default App
  
