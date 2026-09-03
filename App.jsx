@@ -875,6 +875,133 @@ function PaperUsage() {
     </div>
   );
 }
+function GreenRooms() {
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    async function loadGreenRooms() {
+      const { data, error } = await supabase
+        .from("green_rooms")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Error loading green rooms:", error);
+        return;
+      }
+
+      setRooms(data || []);
+    }
+
+    loadGreenRooms();
+  }, []);
+
+  const totalRooms = rooms.length;
+
+  const averageSaving =
+    totalRooms > 0
+      ? Math.round(
+          rooms.reduce(
+            (sum, room) =>
+              sum + Number(room.energy_saving_percent || 0),
+            0
+          ) / totalRooms
+        )
+      : 0;
+
+  const activeRooms = rooms.filter(
+    (room) =>
+      String(room.status || "").toLowerCase() === "active" ||
+      String(room.status || "").toLowerCase() === "good"
+  ).length;
+
+  return (
+    <div>
+      <div className="page-heading">
+        <div>
+          <h2>Green Rooms</h2>
+          <p>Monitor green office initiatives and energy-saving performance.</p>
+        </div>
+      </div>
+
+      <div className="stats-grid">
+        <StatCard
+          title="Green Rooms"
+          value={totalRooms}
+          subtitle="total registered"
+          trend="100%"
+          icon={Leaf}
+        />
+
+        <StatCard
+          title="Energy Saving"
+          value={`${averageSaving}%`}
+          subtitle="average saving"
+          trend="12.5%"
+          icon={Zap}
+        />
+
+        <StatCard
+          title="Active Rooms"
+          value={activeRooms}
+          subtitle="currently active"
+          trend="8.2%"
+          icon={Activity}
+        />
+      </div>
+
+      <Card>
+        <div className="card-header">
+          <div>
+            <h3>Green Room Records</h3>
+            <p>Latest green room information from Supabase.</p>
+          </div>
+          <Leaf size={20} />
+        </div>
+
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Branch ID</th>
+                <th>Room Name</th>
+                <th>Status</th>
+                <th>Energy Saving</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {rooms.map((room) => (
+                <tr key={room.id}>
+                  <td>{room.branch_id}</td>
+
+                  <td>
+                    <strong>{room.room_name}</strong>
+                  </td>
+
+                  <td>
+                    <span
+                      className={`badge ${
+                        String(room.status || "").toLowerCase() === "active" ||
+                        String(room.status || "").toLowerCase() === "good"
+                          ? "good"
+                          : "average"
+                      }`}
+                    >
+                      {room.status}
+                    </span>
+                  </td>
+
+                  <td>{room.energy_saving_percent}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
 function Placeholder({
   title,
   description,
@@ -965,19 +1092,14 @@ function App() {
     </Layout>
   }
 />
-      {/* GREEN ROOMS */}
       <Route
-        path="/green-rooms"
-        element={
-          <Layout>
-            <Placeholder
-              title="Green Rooms"
-              description="Monitor green office and branch initiatives."
-              icon={Leaf}
-            />
-          </Layout>
-        }
-      />
+  path="/green-rooms"
+  element={
+    <Layout>
+      <GreenRooms />
+    </Layout>
+  }
+/>
 
       {/* SMS ALERTS */}
       <Route
