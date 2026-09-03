@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Building2,
@@ -13,12 +14,17 @@ import {
   Settings,
   TrendingUp,
   TrendingDown,
-  Users,
   Activity,
+  Users,
 } from "lucide-react";
+
+/* =========================================================
+   DEFAULT BRANCH DATA
+========================================================= */
 
 const branchSeed = [
   {
+    id: 1,
     name: "Chennai Head Office",
     location: "Chennai",
     employees: 124,
@@ -26,6 +32,7 @@ const branchSeed = [
     status: "Good",
   },
   {
+    id: 2,
     name: "Coimbatore Branch",
     location: "Coimbatore",
     employees: 86,
@@ -33,6 +40,7 @@ const branchSeed = [
     status: "Good",
   },
   {
+    id: 3,
     name: "Madurai Branch",
     location: "Madurai",
     employees: 64,
@@ -40,6 +48,7 @@ const branchSeed = [
     status: "Average",
   },
   {
+    id: 4,
     name: "Trichy Branch",
     location: "Trichy",
     employees: 52,
@@ -48,17 +57,61 @@ const branchSeed = [
   },
 ];
 
+/* =========================================================
+   SIDEBAR NAVIGATION
+========================================================= */
+
 const navItems = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/branches", label: "Branches", icon: Building2 },
-  { path: "/emissions", label: "Emissions", icon: Factory },
-  { path: "/energy", label: "Energy", icon: Zap },
-  { path: "/paper-usage", label: "Paper Usage", icon: FileText },
-  { path: "/green-rooms", label: "Green Rooms", icon: Leaf },
-  { path: "/sms-alerts", label: "SMS Alerts", icon: MessageSquare },
-  { path: "/esg-reports", label: "ESG Reports", icon: BarChart3 },
-  { path: "/admin", label: "Admin", icon: Settings },
+  {
+    path: "/",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    path: "/branches",
+    label: "Branches",
+    icon: Building2,
+  },
+  {
+    path: "/emissions",
+    label: "Emissions",
+    icon: Factory,
+  },
+  {
+    path: "/energy",
+    label: "Energy",
+    icon: Zap,
+  },
+  {
+    path: "/paper-usage",
+    label: "Paper Usage",
+    icon: FileText,
+  },
+  {
+    path: "/green-rooms",
+    label: "Green Rooms",
+    icon: Leaf,
+  },
+  {
+    path: "/sms-alerts",
+    label: "SMS Alerts",
+    icon: MessageSquare,
+  },
+  {
+    path: "/esg-reports",
+    label: "ESG Reports",
+    icon: BarChart3,
+  },
+  {
+    path: "/admin",
+    label: "Admin",
+    icon: Settings,
+  },
 ];
+
+/* =========================================================
+   LAYOUT
+========================================================= */
 
 function Layout({ children }) {
   return (
@@ -68,6 +121,7 @@ function Layout({ children }) {
           <div className="brand-logo">
             <Leaf size={24} />
           </div>
+
           <div>
             <h2>Verdant Bank</h2>
             <span>Green Banking</span>
@@ -96,6 +150,7 @@ function Layout({ children }) {
 
         <div className="sidebar-footer">
           <div className="user-avatar">RS</div>
+
           <div>
             <strong>Admin User</strong>
             <span>ESG Administrator</span>
@@ -122,9 +177,17 @@ function Layout({ children }) {
   );
 }
 
+/* =========================================================
+   CARD
+========================================================= */
+
 function Card({ children, className = "" }) {
   return <div className={`card ${className}`}>{children}</div>;
 }
+
+/* =========================================================
+   STAT CARD
+========================================================= */
 
 function StatCard({
   title,
@@ -153,6 +216,7 @@ function StatCard({
         ) : (
           <TrendingDown size={15} />
         )}
+
         <span>{trend}</span>
         <small>{subtitle}</small>
       </div>
@@ -160,36 +224,91 @@ function StatCard({
   );
 }
 
-function Dashboard() {
-  const [branches, setBranches] = useState([]);
+/* =========================================================
+   LOAD BRANCHES FROM SUPABASE
+========================================================= */
 
-  useEffect(() => {
-    async function loadBranches() {
-      const { data, error } = await supabase
-        .from("branches")
-        .select("*")
-        .order("id", { ascending: true });
-
-      if (error) {
-        console.error("Error loading branches:", error);
-        return;
-      }
-
-      setBranches(data || []);
+async function getBranches() {
+  try {
+    if (!supabase) {
+      return branchSeed;
     }
 
-    loadBranches();
+    const { data, error } = await supabase
+      .from("branches")
+      .select("id,name,location,employees,status")
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error("Error loading branches:", error);
+      return branchSeed;
+    }
+
+    if (!data || data.length === 0) {
+      return branchSeed;
+    }
+
+    return data.map((branch) => {
+      const seed = branchSeed.find(
+        (item) =>
+          item.name === branch.name ||
+          item.location === branch.location
+      );
+
+      return {
+        ...branch,
+        energy: seed ? seed.energy : 0,
+      };
+    });
+  } catch (error) {
+    console.error("Unexpected branch loading error:", error);
+    return branchSeed;
+  }
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function Dashboard() {
+  const [branches, setBranches] = useState(branchSeed);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadData() {
+      const data = await getBranches();
+
+      if (mounted) {
+        setBranches(data);
+      }
+    }
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
+
   return (
     <div>
       <div className="page-heading">
         <div>
           <h2>Overview</h2>
-          <p>Monitor your organisation's sustainability performance.</p>
+          <p>
+            Monitor your organisation's sustainability performance.
+          </p>
         </div>
 
-        <button className="primary-button">Generate Report</button>
+        <button className="primary-button">
+          Generate Report
+        </button>
       </div>
+
+      {/* =====================================================
+          STATISTICS
+      ===================================================== */}
 
       <div className="stats-grid">
         <StatCard
@@ -227,13 +346,20 @@ function Dashboard() {
         />
       </div>
 
+      {/* =====================================================
+          BRANCH + ESG
+      ===================================================== */}
+
       <div className="dashboard-grid">
         <Card>
           <div className="card-header">
             <div>
               <h3>Branch Sustainability</h3>
-              <p>Latest branch-level environmental performance</p>
+              <p>
+                Latest branch-level environmental performance
+              </p>
             </div>
+
             <Activity size={20} />
           </div>
 
@@ -250,17 +376,29 @@ function Dashboard() {
 
               <tbody>
                 {branches.map((branch) => (
-                  <tr key={branch.name}>
+                  <tr key={branch.id || branch.name}>
                     <td>
                       <strong>{branch.name}</strong>
-                      <span className="table-sub">{branch.location}</span>
+
+                      <span className="table-sub">
+                        {branch.location}
+                      </span>
                     </td>
+
                     <td>{branch.employees}</td>
-                    <td>{branch.energy} kWh</td>
+
+                    <td>
+                      {branch.energy
+                        ? `${branch.energy} kWh`
+                        : "—"}
+                    </td>
+
                     <td>
                       <span
                         className={`badge ${
-                          branch.status === "Good" ? "good" : "average"
+                          branch.status === "Good"
+                            ? "good"
+                            : "average"
                         }`}
                       >
                         {branch.status}
@@ -279,6 +417,7 @@ function Dashboard() {
               <h3>ESG Score</h3>
               <p>Current sustainability rating</p>
             </div>
+
             <Leaf size={20} />
           </div>
 
@@ -287,13 +426,16 @@ function Dashboard() {
             <span>/ 100</span>
           </div>
 
-          <div className="score-label">Excellent</div>
+          <div className="score-label">
+            Excellent
+          </div>
 
           <div className="progress-list">
             <div>
               <span>Environmental</span>
               <strong>88%</strong>
             </div>
+
             <div className="progress">
               <span style={{ width: "88%" }}></span>
             </div>
@@ -302,6 +444,7 @@ function Dashboard() {
               <span>Social</span>
               <strong>79%</strong>
             </div>
+
             <div className="progress">
               <span style={{ width: "79%" }}></span>
             </div>
@@ -310,6 +453,7 @@ function Dashboard() {
               <span>Governance</span>
               <strong>81%</strong>
             </div>
+
             <div className="progress">
               <span style={{ width: "81%" }}></span>
             </div>
@@ -317,52 +461,106 @@ function Dashboard() {
         </Card>
       </div>
 
+      {/* =====================================================
+          ENERGY CONSUMPTION
+      ===================================================== */}
+
       <Card className="energy-card">
         <div className="card-header">
           <div>
             <h3>Energy Consumption</h3>
-            <p>Last 30 days · target 7,000 kWh/day</p>
+            <p>
+              Last 30 days · target 7,000 kWh/day
+            </p>
           </div>
+
           <Zap size={20} />
         </div>
 
         <div className="energy-chart">
-          {[42, 55, 48, 65, 58, 72, 61, 68, 52, 74, 64, 70].map(
-            (height, index) => (
-              <div className="bar-group" key={index}>
-                <div
-                  className="energy-bar"
-                  style={{ height: `${height}%` }}
-                ></div>
-                <span>Day {index + 1}</span>
-              </div>
-            )
-          )}
+          {[
+            42,
+            55,
+            48,
+            65,
+            58,
+            72,
+            61,
+            68,
+            52,
+            74,
+            64,
+            70,
+          ].map((height, index) => (
+            <div
+              className="bar-group"
+              key={index}
+            >
+              <div
+                className="energy-bar"
+                style={{
+                  height: `${height}%`,
+                }}
+              ></div>
+
+              <span>Day {index + 1}</span>
+            </div>
+          ))}
         </div>
       </Card>
     </div>
   );
 }
 
+/* =========================================================
+   BRANCHES
+========================================================= */
+
 function Branches() {
+  const [branches, setBranches] = useState(branchSeed);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadData() {
+      const data = await getBranches();
+
+      if (mounted) {
+        setBranches(data);
+      }
+    }
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div>
       <div className="page-heading">
         <div>
           <h2>Branches</h2>
-          <p>Manage and monitor all bank branches.</p>
+          <p>
+            Manage and monitor all bank branches.
+          </p>
         </div>
-        <button className="primary-button">Add Branch</button>
+
+        <button className="primary-button">
+          Add Branch
+        </button>
       </div>
 
       <div className="branch-grid">
         {branches.map((branch) => (
-          <Card key={branch.name}>
+          <Card key={branch.id || branch.name}>
             <div className="branch-icon">
               <Building2 size={24} />
             </div>
 
             <h3>{branch.name}</h3>
+
             <p>{branch.location}</p>
 
             <div className="branch-details">
@@ -370,15 +568,22 @@ function Branches() {
                 <span>Employees</span>
                 <strong>{branch.employees}</strong>
               </div>
+
               <div>
                 <span>Energy</span>
-                <strong>{branch.energy} kWh</strong>
+                <strong>
+                  {branch.energy
+                    ? `${branch.energy} kWh`
+                    : "—"}
+                </strong>
               </div>
             </div>
 
             <span
               className={`badge ${
-                branch.status === "Good" ? "good" : "average"
+                branch.status === "Good"
+                  ? "good"
+                  : "average"
               }`}
             >
               {branch.status}
@@ -390,13 +595,19 @@ function Branches() {
   );
 }
 
+/* =========================================================
+   EMISSIONS
+========================================================= */
+
 function Emissions() {
   return (
     <div>
       <div className="page-heading">
         <div>
           <h2>Carbon Emissions</h2>
-          <p>Track and reduce greenhouse gas emissions.</p>
+          <p>
+            Track and reduce greenhouse gas emissions.
+          </p>
         </div>
       </div>
 
@@ -442,7 +653,9 @@ function Emissions() {
         <div className="card-header">
           <div>
             <h3>Emission Reduction Progress</h3>
-            <p>Annual target: reduce emissions by 25%</p>
+            <p>
+              Annual target: reduce emissions by 25%
+            </p>
           </div>
         </div>
 
@@ -459,13 +672,19 @@ function Emissions() {
   );
 }
 
+/* =========================================================
+   ENERGY
+========================================================= */
+
 function Energy() {
   return (
     <div>
       <div className="page-heading">
         <div>
           <h2>Energy Management</h2>
-          <p>Monitor electricity consumption across branches.</p>
+          <p>
+            Monitor electricity consumption across branches.
+          </p>
         </div>
       </div>
 
@@ -509,29 +728,56 @@ function Energy() {
         <div className="card-header">
           <div>
             <h3>Daily Energy Usage</h3>
-            <p>Last 12 monitoring periods</p>
+            <p>
+              Last 12 monitoring periods
+            </p>
           </div>
         </div>
 
         <div className="energy-chart large">
-          {[48, 60, 52, 70, 58, 76, 64, 72, 55, 80, 66, 74].map(
-            (height, index) => (
-              <div className="bar-group" key={index}>
-                <div
-                  className="energy-bar"
-                  style={{ height: `${height}%` }}
-                ></div>
-                <span>{index + 1}</span>
-              </div>
-            )
-          )}
+          {[
+            48,
+            60,
+            52,
+            70,
+            58,
+            76,
+            64,
+            72,
+            55,
+            80,
+            66,
+            74,
+          ].map((height, index) => (
+            <div
+              className="bar-group"
+              key={index}
+            >
+              <div
+                className="energy-bar"
+                style={{
+                  height: `${height}%`,
+                }}
+              ></div>
+
+              <span>{index + 1}</span>
+            </div>
+          ))}
         </div>
       </Card>
     </div>
   );
 }
 
-function Placeholder({ title, description, icon: Icon }) {
+/* =========================================================
+   PLACEHOLDER MODULE
+========================================================= */
+
+function Placeholder({
+  title,
+  description,
+  icon: Icon,
+}) {
   return (
     <div>
       <div className="page-heading">
@@ -545,20 +791,30 @@ function Placeholder({ title, description, icon: Icon }) {
         <div className="placeholder-icon">
           <Icon size={34} />
         </div>
+
         <h3>{title} Module</h3>
+
         <p>
-          This module is ready for backend integration and live data
-          management.
+          This module is ready for backend integration
+          and live data management.
         </p>
-        <button className="primary-button">Configure Module</button>
+
+        <button className="primary-button">
+          Configure Module
+        </button>
       </Card>
     </div>
   );
 }
 
+/* =========================================================
+   APP
+========================================================= */
+
 function App() {
   return (
     <Routes>
+      {/* DASHBOARD */}
       <Route
         path="/"
         element={
@@ -568,6 +824,7 @@ function App() {
         }
       />
 
+      {/* BRANCHES */}
       <Route
         path="/branches"
         element={
@@ -577,6 +834,7 @@ function App() {
         }
       />
 
+      {/* EMISSIONS */}
       <Route
         path="/emissions"
         element={
@@ -586,6 +844,7 @@ function App() {
         }
       />
 
+      {/* ENERGY */}
       <Route
         path="/energy"
         element={
@@ -595,6 +854,7 @@ function App() {
         }
       />
 
+      {/* PAPER USAGE */}
       <Route
         path="/paper-usage"
         element={
@@ -608,6 +868,7 @@ function App() {
         }
       />
 
+      {/* GREEN ROOMS */}
       <Route
         path="/green-rooms"
         element={
@@ -621,6 +882,7 @@ function App() {
         }
       />
 
+      {/* SMS ALERTS */}
       <Route
         path="/sms-alerts"
         element={
@@ -634,6 +896,7 @@ function App() {
         }
       />
 
+      {/* ESG REPORTS */}
       <Route
         path="/esg-reports"
         element={
@@ -647,6 +910,7 @@ function App() {
         }
       />
 
+      {/* ADMIN */}
       <Route
         path="/admin"
         element={
@@ -660,6 +924,7 @@ function App() {
         }
       />
 
+      {/* FALLBACK */}
       <Route
         path="*"
         element={
