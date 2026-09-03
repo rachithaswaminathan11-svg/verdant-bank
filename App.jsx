@@ -818,4 +818,10 @@ function Energy() {
         </div>
 
         <div className="card">
+          {/* Energy anomaly content goes here */}
+        </div>
+      </div>
+    </div>
+  );
+}
  
