@@ -1002,6 +1002,117 @@ function GreenRooms() {
     </div>
   );
 }
+function SMSAlerts() {
+  const [alerts, setAlerts] = useState([]);
+
+  useEffect(() => {
+    async function loadAlerts() {
+      const { data, error } = await supabase
+        .from("sms_alerts")
+        .select("*")
+        .order("id", { ascending: false });
+
+      if (error) {
+        console.error("Error loading SMS alerts:", error);
+        return;
+      }
+
+      setAlerts(data || []);
+    }
+
+    loadAlerts();
+  }, []);
+
+  const totalAlerts = alerts.length;
+
+  const activeAlerts = alerts.filter(
+    (alert) =>
+      String(alert.status || "").toLowerCase() === "active" ||
+      String(alert.status || "").toLowerCase() === "pending"
+  ).length;
+
+  return (
+    <div>
+      <div className="page-heading">
+        <div>
+          <h2>SMS Alerts</h2>
+          <p>Manage sustainability alerts and notifications.</p>
+        </div>
+      </div>
+
+      <div className="stats-grid">
+        <StatCard
+          title="Total Alerts"
+          value={totalAlerts}
+          subtitle="alerts recorded"
+          trend="100%"
+          icon={MessageSquare}
+        />
+
+        <StatCard
+          title="Active Alerts"
+          value={activeAlerts}
+          subtitle="currently active"
+          trend="8.5%"
+          icon={Activity}
+        />
+      </div>
+
+      <Card>
+        <div className="card-header">
+          <div>
+            <h3>SMS Alert Records</h3>
+            <p>Latest sustainability alerts from Supabase.</p>
+          </div>
+          <MessageSquare size={20} />
+        </div>
+
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Branch ID</th>
+                <th>Message</th>
+                <th>Severity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {alerts.map((alert) => (
+                <tr key={alert.id}>
+                  <td>{alert.branch_id}</td>
+
+                  <td>
+                    <strong>{alert.message}</strong>
+                  </td>
+
+                  <td>
+                    <span className="badge average">
+                      {alert.severity}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      className={`badge ${
+                        String(alert.status || "").toLowerCase() === "active"
+                          ? "good"
+                          : "average"
+                      }`}
+                    >
+                      {alert.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
 function Placeholder({
   title,
   description,
@@ -1103,17 +1214,13 @@ function App() {
 
       {/* SMS ALERTS */}
       <Route
-        path="/sms-alerts"
-        element={
-          <Layout>
-            <Placeholder
-              title="SMS Alerts"
-              description="Manage sustainability alerts and notifications."
-              icon={MessageSquare}
-            />
-          </Layout>
-        }
-      />
+  path="/sms-alerts"
+  element={
+    <Layout>
+      <SMSAlerts />
+    </Layout>
+  }
+/>
 
       {/* ESG REPORTS */}
       <Route
