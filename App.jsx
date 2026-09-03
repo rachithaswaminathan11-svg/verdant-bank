@@ -772,7 +772,109 @@ function Energy() {
 /* =========================================================
    PLACEHOLDER MODULE
 ========================================================= */
+function PaperUsage() {
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    async function loadPaperUsage() {
+      const { data, error } = await supabase
+        .from("paper_usage")
+        .select("*")
+        .order("usage_date", { ascending: false });
+
+      if (error) {
+        console.error("Error loading paper usage:", error);
+        return;
+      }
+
+      setData(data || []);
+    }
+
+    loadPaperUsage();
+  }, []);
+
+  const totalUsed = data.reduce(
+    (sum, item) => sum + Number(item.paper_used_kg || 0),
+    0
+  );
+
+  const totalSaved = data.reduce(
+    (sum, item) => sum + Number(item.paper_saved_kg || 0),
+    0
+  );
+
+  return (
+    <div>
+      <div className="page-heading">
+        <div>
+          <h2>Paper Usage</h2>
+          <p>Track paper consumption and paper-saving performance.</p>
+        </div>
+      </div>
+
+      <div className="stats-grid">
+        <StatCard
+          title="Paper Used"
+          value={`${totalUsed} kg`}
+          subtitle="total recorded"
+          trend="12.4%"
+          icon={FileText}
+          trendType="down"
+        />
+
+        <StatCard
+          title="Paper Saved"
+          value={`${totalSaved} kg`}
+          subtitle="total saved"
+          trend="18.7%"
+          icon={Leaf}
+        />
+
+        <StatCard
+          title="Records"
+          value={data.length}
+          subtitle="usage records"
+          trend="100%"
+          icon={Activity}
+        />
+      </div>
+
+      <Card>
+        <div className="card-header">
+          <div>
+            <h3>Paper Usage Records</h3>
+            <p>Latest paper consumption data from all branches.</p>
+          </div>
+          <FileText size={20} />
+        </div>
+
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Branch ID</th>
+                <th>Paper Used</th>
+                <th>Paper Saved</th>
+                <th>Usage Date</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {data.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.branch_id}</td>
+                  <td>{item.paper_used_kg} kg</td>
+                  <td>{item.paper_saved_kg} kg</td>
+                  <td>{item.usage_date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+  );
+}
 function Placeholder({
   title,
   description,
@@ -856,18 +958,13 @@ function App() {
 
       {/* PAPER USAGE */}
       <Route
-        path="/paper-usage"
-        element={
-          <Layout>
-            <Placeholder
-              title="Paper Usage"
-              description="Track paper consumption and digitalisation progress."
-              icon={FileText}
-            />
-          </Layout>
-        }
-      />
-
+  path="/paper-usage"
+  element={
+    <Layout>
+      <PaperUsage />
+    </Layout>
+  }
+/>
       {/* GREEN ROOMS */}
       <Route
         path="/green-rooms"
