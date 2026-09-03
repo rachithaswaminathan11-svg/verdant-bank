@@ -24,136 +24,16 @@ import {
 } from "lucide-react";
 
 const branchSeed = [
-  {
-    name: "Mumbai Fort",
-    city: "Mumbai",
-    region: "West",
-    code: "MUM-001",
-    manager: "Priya Shah",
-    score: 78,
-    grade: "B",
-    co2: 12.4,
-    kwh: 18.4,
-    paper: 24.0,
-    trend: -4.2,
-  },
-  {
-    name: "Delhi Connaught",
-    city: "Delhi",
-    region: "North",
-    code: "DEL-014",
-    manager: "Arjun Mehta",
-    score: 64,
-    grade: "C",
-    co2: 18.9,
-    kwh: 27.2,
-    paper: 31.0,
-    trend: 2.1,
-  },
-  {
-    name: "Bangalore MG Road",
-    city: "Bangalore",
-    region: "South",
-    code: "BLR-007",
-    manager: "Divya Rao",
-    score: 91,
-    grade: "A",
-    co2: 8.2,
-    kwh: 12.8,
-    paper: 15.4,
-    trend: -8.5,
-  },
-  {
-    name: "Chennai T. Nagar",
-    city: "Chennai",
-    region: "South",
-    code: "CHN-022",
-    manager: "Karthik Iyer",
-    score: 74,
-    grade: "B",
-    co2: 14.1,
-    kwh: 21.5,
-    paper: 22.8,
-    trend: -1.4,
-  },
-  {
-    name: "Kolkata Park St",
-    city: "Kolkata",
-    region: "East",
-    code: "KOL-009",
-    manager: "Riya Sen",
-    score: 52,
-    grade: "D",
-    co2: 22.5,
-    kwh: 32.0,
-    paper: 40.2,
-    trend: 6.8,
-  },
-  {
-    name: "Hyderabad Banjara",
-    city: "Hyderabad",
-    region: "South",
-    code: "HYD-018",
-    manager: "Anil Reddy",
-    score: 86,
-    grade: "A",
-    co2: 10.3,
-    kwh: 15.6,
-    paper: 18.7,
-    trend: -5.2,
-  },
-  {
-    name: "Pune Koregaon",
-    city: "Pune",
-    region: "West",
-    code: "PUN-031",
-    manager: "Sneha Kulkarni",
-    score: 80,
-    grade: "B",
-    co2: 11.8,
-    kwh: 17.3,
-    paper: 20.1,
-    trend: -3.1,
-  },
-  {
-    name: "Ahmedabad CG Rd",
-    city: "Ahmedabad",
-    region: "West",
-    code: "AHM-045",
-    manager: "Vikram Patel",
-    score: 68,
-    grade: "C",
-    co2: 16.7,
-    kwh: 24.8,
-    paper: 28.9,
-    trend: 1.5,
-  },
-  {
-    name: "Jaipur MI Road",
-    city: "Jaipur",
-    region: "North",
-    code: "JAI-052",
-    manager: "Neha Sharma",
-    score: 72,
-    grade: "B",
-    co2: 13.2,
-    kwh: 19.7,
-    paper: 21.4,
-    trend: -2.0,
-  },
-  {
-    name: "Panaji Main",
-    city: "Panaji",
-    region: "West",
-    code: "GOA-061",
-    manager: "Rohan D'Souza",
-    score: 94,
-    grade: "A",
-    co2: 6.9,
-    kwh: 10.2,
-    paper: 12.8,
-    trend: -11.3,
-  },
+  { name: "Mumbai Fort", city: "Mumbai", region: "West", code: "MUM-001", manager: "Priya Shah", score: 78, grade: "B", co2: 12.4, kwh: 18.4, paper: 24.0, trend: -4.2 },
+  { name: "Delhi Connaught", city: "Delhi", region: "North", code: "DEL-014", manager: "Arjun Mehta", score: 64, grade: "C", co2: 18.9, kwh: 27.2, paper: 31.0, trend: 2.1 },
+  { name: "Bangalore MG Road", city: "Bangalore", region: "South", code: "BLR-007", manager: "Divya Rao", score: 91, grade: "A", co2: 8.2, kwh: 12.8, paper: 15.4, trend: -8.5 },
+  { name: "Chennai T. Nagar", city: "Chennai", region: "South", code: "CHN-022", manager: "Karthik Iyer", score: 74, grade: "B", co2: 14.1, kwh: 21.5, paper: 22.8, trend: -1.4 },
+  { name: "Kolkata Park St", city: "Kolkata", region: "East", code: "KOL-009", manager: "Riya Sen", score: 52, grade: "D", co2: 22.5, kwh: 32.0, paper: 40.2, trend: 6.8 },
+  { name: "Hyderabad Banjara", city: "Hyderabad", region: "South", code: "HYD-018", manager: "Anil Reddy", score: 86, grade: "A", co2: 10.3, kwh: 15.6, paper: 18.7, trend: -5.2 },
+  { name: "Pune Koregaon", city: "Pune", region: "West", code: "PUN-031", manager: "Sneha Kulkarni", score: 80, grade: "B", co2: 11.8, kwh: 17.3, paper: 20.1, trend: -3.1 },
+  { name: "Ahmedabad CG Rd", city: "Ahmedabad", region: "West", code: "AHM-045", manager: "Vikram Patel", score: 68, grade: "C", co2: 16.7, kwh: 24.8, paper: 28.9, trend: 1.5 },
+  { name: "Jaipur MI Road", city: "Jaipur", region: "North", code: "JAI-052", manager: "Neha Sharma", score: 72, grade: "B", co2: 13.2, kwh: 19.7, paper: 21.4, trend: -2.0 },
+  { name: "Panaji Main", city: "Panaji", region: "West", code: "GOA-061", manager: "Rohan D'Souza", score: 94, grade: "A", co2: 6.9, kwh: 10.2, paper: 12.8, trend: -11.3 },
 ];
 
 const nav = [
@@ -263,13 +143,7 @@ function Layout({ children }) {
   );
 }
 
-function Card({
-  title,
-  value,
-  sub,
-  icon: Icon,
-  good = true,
-}) {
+function Card({ title, value, sub, icon: Icon }) {
   return (
     <div className="metric card">
       <div className="metric-top">
@@ -282,7 +156,7 @@ function Card({
 
       <strong>{value}</strong>
 
-      <div className={good ? "delta good" : "delta bad"}>
+      <div className="delta good">
         {sub}
       </div>
     </div>
@@ -290,15 +164,6 @@ function Card({
 }
 
 function Dashboard({ branches }) {
-  const trend = [
-    { m: "Feb", e: 154, n: 225 },
-    { m: "Mar", e: 149, n: 219 },
-    { m: "Apr", e: 145, n: 211 },
-    { m: "May", e: 142, n: 207 },
-    { m: "Jun", e: 141, n: 206 },
-    { m: "Jul", e: 135, n: 199 },
-  ];
-
   const sources = [
     ["Electricity", 48],
     ["Travel", 19],
@@ -337,7 +202,7 @@ function Dashboard({ branches }) {
           <p>
             Bank-wide emissions fell 4.2% MoM.
             Kolkata Park St drove 63% of the remaining
-            variance — consider an HVAC audit and a
+            variance. Consider an HVAC audit and a
             paper-lite retrofit.
           </p>
         </div>
@@ -404,9 +269,12 @@ function Dashboard({ branches }) {
             </svg>
 
             <div className="axis">
-              {trend.map((x) => (
-                <span key={x.m}>{x.m}</span>
-              ))}
+              <span>Feb</span>
+              <span>Mar</span>
+              <span>Apr</span>
+              <span>May</span>
+              <span>Jun</span>
+              <span>Jul</span>
             </div>
           </div>
         </div>
@@ -428,7 +296,7 @@ function Dashboard({ branches }) {
                   style={{
                     width: `${value * 1.65}%`,
                   }}
-                />
+                ></i>
               </div>
 
               <b>{value}%</b>
@@ -490,7 +358,9 @@ function Dashboard({ branches }) {
 
                     <td
                       className={
-                        branch.trend < 0 ? "green" : "red"
+                        branch.trend < 0
+                          ? "green"
+                          : "red"
                       }
                     >
                       {branch.trend < 0 ? "▼" : "▲"}{" "}
@@ -532,11 +402,14 @@ function Branches({ branches, setBranches }) {
           <h1>Branch Management</h1>
 
           <p className="muted">
-            {branches.length} of {branches.length} branches
+            {branches.length} branches
           </p>
         </div>
 
-        <button className="primary" onClick={addBranch}>
+        <button
+          className="primary"
+          onClick={addBranch}
+        >
           <Plus size={17} />
           Add branch
         </button>
@@ -546,7 +419,7 @@ function Branches({ branches, setBranches }) {
         <Search size={18} />
 
         <input
-          placeholder="Search by name, code, city…"
+          placeholder="Search by name, code, city..."
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -558,6 +431,7 @@ function Branches({ branches, setBranches }) {
             <div className="branch-title">
               <div>
                 <b>{branch.name}</b>
+
                 <span>
                   {branch.city} · {branch.region}
                 </span>
@@ -598,7 +472,9 @@ function Branches({ branches, setBranches }) {
 
             <div
               className={
-                branch.trend < 0 ? "green" : "red"
+                branch.trend < 0
+                  ? "green"
+                  : "red"
               }
             >
               {branch.trend < 0 ? "▼" : "▲"}{" "}
@@ -645,22 +521,6 @@ function Emissions() {
       unit: "kWh",
       co2: "5.58",
     },
-    {
-      date: "2026-07-06",
-      branch: "Pune Koregaon",
-      source: "Fleet",
-      qty: "320",
-      unit: "L",
-      co2: "0.83",
-    },
-    {
-      date: "2026-07-05",
-      branch: "Hyderabad Banjara",
-      source: "Electricity",
-      qty: "3,600",
-      unit: "kWh",
-      co2: "2.95",
-    },
   ]);
 
   const [form, setForm] = useState({
@@ -697,7 +557,10 @@ function Emissions() {
       co2: calculatedCO2,
     };
 
-    setRows((previous) => [newRow, ...previous]);
+    setRows((previous) => [
+      newRow,
+      ...previous,
+    ]);
 
     setForm((previous) => ({
       ...previous,
@@ -710,6 +573,7 @@ function Emissions() {
       <div className="page-head">
         <div>
           <h1>Carbon Emissions Tracker</h1>
+
           <p className="muted">
             Auto-calculated using standard emission factors
           </p>
@@ -722,8 +586,7 @@ function Emissions() {
             <b>Log emission entry</b>
 
             <span>
-              CO₂e is auto-calculated with GHG Protocol
-              emission factors.
+              CO₂e is automatically calculated.
             </span>
           </div>
         </div>
@@ -761,14 +624,10 @@ function Emissions() {
                 })
               }
             >
-              {[
-                "Electricity",
-                "Travel",
-                "Waste",
-                "Fleet",
-              ].map((source) => (
-                <option key={source}>{source}</option>
-              ))}
+              <option>Electricity</option>
+              <option>Travel</option>
+              <option>Waste</option>
+              <option>Fleet</option>
             </select>
           </label>
 
@@ -798,7 +657,7 @@ function Emissions() {
                   unit: e.target.value,
                 })
               }
-              placeholder="kWh, km, kg, L…"
+              placeholder="kWh, km, kg, L"
             />
           </label>
 
@@ -857,24 +716,9 @@ function Emissions() {
 
 function Energy() {
   const anomalies = [
-    [
-      "Kolkata Park St",
-      "high",
-      "Energy · 11,240 kWh",
-      "Detected Jul 19, 03:12",
-    ],
-    [
-      "Delhi Connaught",
-      "medium",
-      "Energy · 9,180 kWh",
-      "Detected Jul 14, 14:40",
-    ],
-    [
-      "Ahmedabad CG Rd",
-      "low",
-      "Paper · 1,820 sheets",
-      "Detected Jul 09, 10:22",
-    ],
+    ["Kolkata Park St", "high", "Energy · 11,240 kWh", "Detected Jul 19"],
+    ["Delhi Connaught", "medium", "Energy · 9,180 kWh", "Detected Jul 14"],
+    ["Ahmedabad CG Rd", "low", "Paper · 1,820 sheets", "Detected Jul 09"],
   ];
 
   return (
@@ -882,6 +726,7 @@ function Energy() {
       <div className="page-head">
         <div>
           <h1>Energy Consumption Monitor</h1>
+
           <p className="muted">
             Daily kWh vs. target · anomaly detection
           </p>
@@ -916,6 +761,50 @@ function Energy() {
           <div className="card-head">
             <div>
               <b>Bank-wide daily consumption</b>
+
               <span>
                 Last 30 days · target 7,000 kWh/day
-    [
+              </span>
+            </div>
+          </div>
+
+          <div className="energy-visual">
+            {Array.from(
+              { length: 30 },
+              (_, index) => (
+                <i
+                  key={index}
+                  style={{
+                    height: `${35 + ((index * 17) % 55)}%`,
+                  }}
+                ></i>
+              )
+            )}
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head">
+            <div>
+              <b>Energy anomalies</b>
+
+              <span>
+                Detected automatically
+              </span>
+            </div>
+          </div>
+
+          {anomalies.map(
+            ([branch, level, detail, time]) => (
+              <div
+                className="anomaly"
+                key={branch}
+              >
+                <div>
+                  <b>{branch}</b>
+                  <span>{detail}</span>
+                  <small>{time}</small>
+                </div>
+
+                <span
+                  className={`severity $
