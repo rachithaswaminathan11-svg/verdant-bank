@@ -17,7 +17,7 @@ import {
   Activity,
 } from "lucide-react";
 
-const branches = [
+const branchSeed = [
   {
     name: "Chennai Head Office",
     location: "Chennai",
@@ -161,6 +161,25 @@ function StatCard({
 }
 
 function Dashboard() {
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    async function loadBranches() {
+      const { data, error } = await supabase
+        .from("branches")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Error loading branches:", error);
+        return;
+      }
+
+      setBranches(data || []);
+    }
+
+    loadBranches();
+  }, []);
   return (
     <div>
       <div className="page-heading">
