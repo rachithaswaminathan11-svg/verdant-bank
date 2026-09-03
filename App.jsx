@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "./lib/supabase";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
