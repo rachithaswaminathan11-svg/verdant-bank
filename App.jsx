@@ -272,24 +272,40 @@ async function getBranches() {
 
 function Dashboard() {
   const [branches, setBranches] = useState(branchSeed);
+  const [energyUsage, setEnergyUsage] = useState(0);
 
   useEffect(() => {
-    let mounted = true;
+  let mounted = true;
 
-    async function loadData() {
-      const data = await getBranches();
+  async function loadData() {
+    const data = await getBranches();
 
-      if (mounted) {
-        setBranches(data);
-      }
+    const { data: energyData, error: energyError } = await supabase
+      .from("energy_usage")
+      .select("usage_kwh");
+
+    if (energyError) {
+      console.error("Energy data error:", energyError);
     }
 
-    loadData();
+    if (mounted) {
+      setBranches(data);
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
+      const totalEnergy = (energyData || []).reduce(
+        (total, row) => total + Number(row.usage_kwh || 0),
+        0
+      );
+
+      setEnergyUsage(totalEnergy);
+    }
+  }
+
+  loadData();
+
+  return () => {
+    mounted = false;
+  };
+}, []);
 
   return (
     <div>
@@ -317,8 +333,8 @@ function Dashboard() {
 
         <StatCard
           title="Energy Usage"
-          value="12,840 kWh"
-          subtitle="vs last month"
+          value={`${energyUsage.toLocaleString()} kWh`}
+          subtitle="from database"
           trend="6.2%"
           icon={Zap}
           trendType="down"
