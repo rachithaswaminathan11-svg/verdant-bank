@@ -1244,11 +1244,209 @@ function ESGReports() {
     </div>
   );
 }
-function Placeholder({
-  title,
-  description,
-  icon: Icon,
-}) {
+/* =========================================================
+   ADMIN MODULE
+========================================================= */
+
+function Admin() {
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadAdminData() {
+      try {
+        if (!supabase) {
+          setLoading(false);
+          return;
+        }
+
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          setLoading(false);
+          return;
+        }
+
+        setUser(user);
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id,email,full_name,role,created_at")
+          .eq("id", user.id)
+          .single();
+
+        if (error) {
+          console.error("Error loading admin profile:", error);
+        } else {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error("Unexpected admin loading error:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadAdminData();
+  }, []);
+
+  return (
+    <div>
+      <div className="page-heading">
+        <div>
+          <h2>Administration</h2>
+          <p>
+            Manage administrator profile and system configuration.
+          </p>
+        </div>
+      </div>
+
+      {loading ? (
+        <Card>
+          <p>Loading administrator information...</p>
+        </Card>
+      ) : !user ? (
+        <Card className="placeholder-card">
+          <div className="placeholder-icon">
+            <Users size={34} />
+          </div>
+
+          <h3>No authenticated user</h3>
+
+          <p>
+            Please sign in with the Supabase administrator account
+            to view administrator information.
+          </p>
+        </Card>
+      ) : (
+        <>
+          <div className="stats-grid">
+            <StatCard
+              title="Admin Status"
+              value="Active"
+              subtitle="authenticated account"
+              trend="100%"
+              icon={Users}
+            />
+
+            <StatCard
+              title="Role"
+              value={profile?.role || "admin"}
+              subtitle="assigned access level"
+              trend="Active"
+              icon={Settings}
+            />
+
+            <StatCard
+              title="Authentication"
+              value="Verified"
+              subtitle="Supabase Auth"
+              trend="Secure"
+              icon={Activity}
+            />
+          </div>
+
+          <Card>
+            <div className="card-header">
+              <div>
+                <h3>Administrator Profile</h3>
+                <p>Current authenticated administrator details.</p>
+              </div>
+
+              <Users size={20} />
+            </div>
+
+            <div className="table-wrapper">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>Full Name</th>
+                    <td>
+                      {profile?.full_name || "Admin User"}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>Email</th>
+                    <td>
+                      {profile?.email || user.email || "—"}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>Role</th>
+                    <td>
+                      <span className="badge good">
+                        {profile?.role || "admin"}
+                      </span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>User ID</th>
+                    <td>{user.id}</td>
+                  </tr>
+
+                  <tr>
+                    <th>Account Created</th>
+                    <td>
+                      {user.created_at
+                        ? new Date(user.created_at).toLocaleString()
+                        : "—"}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          <Card>
+            <div className="card-header">
+              <div>
+                <h3>System Configuration</h3>
+                <p>Current Verdant Bank administration modules.</p>
+              </div>
+
+              <Settings size={20} />
+            </div>
+
+            <div className="progress-list">
+              <div>
+                <span>Branch Management</span>
+                <strong>Connected</strong>
+              </div>
+
+              <div className="progress">
+                <span style={{ width: "100%" }}></span>
+              </div>
+
+              <div>
+                <span>Energy Monitoring</span>
+                <strong>Connected</strong>
+              </div>
+
+              <div className="progress">
+                <span style={{ width: "100%" }}></span>
+              </div>
+
+              <div>
+                <span>ESG Reports</span>
+                <strong>Connected</strong>
+              </div>
+
+              <div className="progress">
+                <span style={{ width: "100%" }}></span>
+              </div>
+            </div>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}{
   return (
     <div>
       <div className="page-heading">
@@ -1364,18 +1562,15 @@ function App() {
 />
 
       {/* ADMIN */}
-      <Route
-        path="/admin"
-        element={
-          <Layout>
-            <Placeholder
-              title="Administration"
-              description="Manage users, settings and system configuration."
-              icon={Users}
-            />
-          </Layout>
-        }
-      />
+     {/* ADMIN */}
+<Route
+  path="/admin"
+  element={
+    <Layout>
+      <Admin />
+    </Layout>
+  }
+/>
 
       {/* FALLBACK */}
       <Route
