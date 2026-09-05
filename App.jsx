@@ -309,8 +309,8 @@ function Dashboard() {
       <div className="stats-grid">
         <StatCard
           title="Total Branches"
-          value="24"
-          subtitle="this month"
+          value={branches.length}
+          subtitle="current branches"
           trend="8.4%"
           icon={Building2}
         />
