@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./lib/supabase";
 import { Routes, Route, NavLink } from "react-router-dom";
-
+import Login from "./Login";
 import {
   LayoutDashboard,
   Building2,
@@ -1517,6 +1517,11 @@ function Admin() {
 function App() {
   return (
     <Routes>
+      {/* LOGIN */}
+<Route
+  path="/login"
+  element={<Login />}
+/>
       {/* DASHBOARD */}
       <Route
         path="/"
