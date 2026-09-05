@@ -306,10 +306,6 @@ function Dashboard() {
         </button>
       </div>
 
-      {/* =====================================================
-          STATISTICS
-      ===================================================== */}
-
       <div className="stats-grid">
         <StatCard
           title="Total Branches"
@@ -345,10 +341,6 @@ function Dashboard() {
           icon={FileText}
         />
       </div>
-
-      {/* =====================================================
-          BRANCH + ESG
-      ===================================================== */}
 
       <div className="dashboard-grid">
         <Card>
@@ -460,10 +452,6 @@ function Dashboard() {
           </div>
         </Card>
       </div>
-
-      {/* =====================================================
-          ENERGY CONSUMPTION
-      ===================================================== */}
 
       <Card className="energy-card">
         <div className="card-header">
@@ -770,8 +758,9 @@ function Energy() {
 }
 
 /* =========================================================
-   PLACEHOLDER MODULE
+   PAPER USAGE
 ========================================================= */
+
 function PaperUsage() {
   const [data, setData] = useState([]);
 
@@ -808,7 +797,9 @@ function PaperUsage() {
       <div className="page-heading">
         <div>
           <h2>Paper Usage</h2>
-          <p>Track paper consumption and paper-saving performance.</p>
+          <p>
+            Track paper consumption and paper-saving performance.
+          </p>
         </div>
       </div>
 
@@ -843,8 +834,11 @@ function PaperUsage() {
         <div className="card-header">
           <div>
             <h3>Paper Usage Records</h3>
-            <p>Latest paper consumption data from all branches.</p>
+            <p>
+              Latest paper consumption data from all branches.
+            </p>
           </div>
+
           <FileText size={20} />
         </div>
 
@@ -875,6 +869,11 @@ function PaperUsage() {
     </div>
   );
 }
+
+/* =========================================================
+   GREEN ROOMS
+========================================================= */
+
 function GreenRooms() {
   const [rooms, setRooms] = useState([]);
 
@@ -920,7 +919,10 @@ function GreenRooms() {
       <div className="page-heading">
         <div>
           <h2>Green Rooms</h2>
-          <p>Monitor green office initiatives and energy-saving performance.</p>
+          <p>
+            Monitor green office initiatives and energy-saving
+            performance.
+          </p>
         </div>
       </div>
 
@@ -954,8 +956,11 @@ function GreenRooms() {
         <div className="card-header">
           <div>
             <h3>Green Room Records</h3>
-            <p>Latest green room information from Supabase.</p>
+            <p>
+              Latest green room information from Supabase.
+            </p>
           </div>
+
           <Leaf size={20} />
         </div>
 
@@ -982,8 +987,10 @@ function GreenRooms() {
                   <td>
                     <span
                       className={`badge ${
-                        String(room.status || "").toLowerCase() === "active" ||
-                        String(room.status || "").toLowerCase() === "good"
+                        String(room.status || "").toLowerCase() ===
+                          "active" ||
+                        String(room.status || "").toLowerCase() ===
+                          "good"
                           ? "good"
                           : "average"
                       }`}
@@ -1002,6 +1009,11 @@ function GreenRooms() {
     </div>
   );
 }
+
+/* =========================================================
+   SMS ALERTS
+========================================================= */
+
 function SMSAlerts() {
   const [alerts, setAlerts] = useState([]);
 
@@ -1036,7 +1048,9 @@ function SMSAlerts() {
       <div className="page-heading">
         <div>
           <h2>SMS Alerts</h2>
-          <p>Manage sustainability alerts and notifications.</p>
+          <p>
+            Manage sustainability alerts and notifications.
+          </p>
         </div>
       </div>
 
@@ -1062,8 +1076,11 @@ function SMSAlerts() {
         <div className="card-header">
           <div>
             <h3>SMS Alert Records</h3>
-            <p>Latest sustainability alerts from Supabase.</p>
+            <p>
+              Latest sustainability alerts from Supabase.
+            </p>
           </div>
+
           <MessageSquare size={20} />
         </div>
 
@@ -1096,7 +1113,8 @@ function SMSAlerts() {
                   <td>
                     <span
                       className={`badge ${
-                        String(alert.status || "").toLowerCase() === "active"
+                        String(alert.status || "").toLowerCase() ===
+                        "active"
                           ? "good"
                           : "average"
                       }`}
@@ -1113,6 +1131,11 @@ function SMSAlerts() {
     </div>
   );
 }
+
+/* =========================================================
+   ESG REPORTS
+========================================================= */
+
 function ESGReports() {
   const [reports, setReports] = useState([]);
 
@@ -1140,7 +1163,19 @@ function ESGReports() {
     totalReports > 0
       ? Math.round(
           reports.reduce(
-            (sum, report) => sum + Number(report.overall_score || 0),
+            (sum, report) =>
+              sum + Number(report.overall_score || 0),
+            0
+          ) / totalReports
+        )
+      : 0;
+
+  const averageEnvironmental =
+    totalReports > 0
+      ? Math.round(
+          reports.reduce(
+            (sum, report) =>
+              sum + Number(report.environmental_score || 0),
             0
           ) / totalReports
         )
@@ -1151,10 +1186,15 @@ function ESGReports() {
       <div className="page-heading">
         <div>
           <h2>ESG Reports</h2>
-          <p>View environmental, social and governance performance reports.</p>
+          <p>
+            View environmental, social and governance
+            performance reports.
+          </p>
         </div>
 
-        <button className="primary-button">Generate Report</button>
+        <button className="primary-button">
+          Generate Report
+        </button>
       </div>
 
       <div className="stats-grid">
@@ -1176,17 +1216,7 @@ function ESGReports() {
 
         <StatCard
           title="Environmental"
-          value={
-            totalReports > 0
-              ? `${Math.round(
-                  reports.reduce(
-                    (sum, report) =>
-                      sum + Number(report.environmental_score || 0),
-                    0
-                  ) / totalReports
-                )}/100`
-              : "0/100"
-          }
+          value={`${averageEnvironmental}/100`}
           subtitle="average score"
           trend="11.2%"
           icon={Factory}
@@ -1197,8 +1227,11 @@ function ESGReports() {
         <div className="card-header">
           <div>
             <h3>ESG Report Records</h3>
-            <p>Latest sustainability reports from Supabase.</p>
+            <p>
+              Latest sustainability reports from Supabase.
+            </p>
           </div>
+
           <BarChart3 size={20} />
         </div>
 
@@ -1244,6 +1277,7 @@ function ESGReports() {
     </div>
   );
 }
+
 /* =========================================================
    ADMIN MODULE
 ========================================================= */
@@ -1274,17 +1308,25 @@ function Admin() {
 
         const { data, error } = await supabase
           .from("profiles")
-          .select("id,email,full_name,role,created_at")
+          .select(
+            "id,email,full_name,role,created_at"
+          )
           .eq("id", user.id)
           .single();
 
         if (error) {
-          console.error("Error loading admin profile:", error);
+          console.error(
+            "Error loading admin profile:",
+            error
+          );
         } else {
           setProfile(data);
         }
       } catch (error) {
-        console.error("Unexpected admin loading error:", error);
+        console.error(
+          "Unexpected admin loading error:",
+          error
+        );
       } finally {
         setLoading(false);
       }
@@ -1299,14 +1341,17 @@ function Admin() {
         <div>
           <h2>Administration</h2>
           <p>
-            Manage administrator profile and system configuration.
+            Manage administrator profile and system
+            configuration.
           </p>
         </div>
       </div>
 
       {loading ? (
         <Card>
-          <p>Loading administrator information...</p>
+          <p>
+            Loading administrator information...
+          </p>
         </Card>
       ) : !user ? (
         <Card className="placeholder-card">
@@ -1317,8 +1362,8 @@ function Admin() {
           <h3>No authenticated user</h3>
 
           <p>
-            Please sign in with the Supabase administrator account
-            to view administrator information.
+            Please sign in with the Supabase administrator
+            account to view administrator information.
           </p>
         </Card>
       ) : (
@@ -1353,7 +1398,10 @@ function Admin() {
             <div className="card-header">
               <div>
                 <h3>Administrator Profile</h3>
-                <p>Current authenticated administrator details.</p>
+                <p>
+                  Current authenticated administrator
+                  details.
+                </p>
               </div>
 
               <Users size={20} />
@@ -1365,14 +1413,17 @@ function Admin() {
                   <tr>
                     <th>Full Name</th>
                     <td>
-                      {profile?.full_name || "Admin User"}
+                      {profile?.full_name ||
+                        "Admin User"}
                     </td>
                   </tr>
 
                   <tr>
                     <th>Email</th>
                     <td>
-                      {profile?.email || user.email || "—"}
+                      {profile?.email ||
+                        user.email ||
+                        "—"}
                     </td>
                   </tr>
 
@@ -1394,7 +1445,9 @@ function Admin() {
                     <th>Account Created</th>
                     <td>
                       {user.created_at
-                        ? new Date(user.created_at).toLocaleString()
+                        ? new Date(
+                            user.created_at
+                          ).toLocaleString()
                         : "—"}
                     </td>
                   </tr>
@@ -1407,7 +1460,10 @@ function Admin() {
             <div className="card-header">
               <div>
                 <h3>System Configuration</h3>
-                <p>Current Verdant Bank administration modules.</p>
+                <p>
+                  Current Verdant Bank administration
+                  modules.
+                </p>
               </div>
 
               <Settings size={20} />
@@ -1420,7 +1476,9 @@ function Admin() {
               </div>
 
               <div className="progress">
-                <span style={{ width: "100%" }}></span>
+                <span
+                  style={{ width: "100%" }}
+                ></span>
               </div>
 
               <div>
@@ -1429,7 +1487,9 @@ function Admin() {
               </div>
 
               <div className="progress">
-                <span style={{ width: "100%" }}></span>
+                <span
+                  style={{ width: "100%" }}
+                ></span>
               </div>
 
               <div>
@@ -1438,40 +1498,14 @@ function Admin() {
               </div>
 
               <div className="progress">
-                <span style={{ width: "100%" }}></span>
+                <span
+                  style={{ width: "100%" }}
+                ></span>
               </div>
             </div>
           </Card>
         </>
       )}
-    </div>
-  );
-}{
-  return (
-    <div>
-      <div className="page-heading">
-        <div>
-          <h2>{title}</h2>
-          <p>{description}</p>
-        </div>
-      </div>
-
-      <Card className="placeholder-card">
-        <div className="placeholder-icon">
-          <Icon size={34} />
-        </div>
-
-        <h3>{title} Module</h3>
-
-        <p>
-          This module is ready for backend integration
-          and live data management.
-        </p>
-
-        <button className="primary-button">
-          Configure Module
-        </button>
-      </Card>
     </div>
   );
 }
@@ -1525,52 +1559,53 @@ function App() {
 
       {/* PAPER USAGE */}
       <Route
-  path="/paper-usage"
-  element={
-    <Layout>
-      <PaperUsage />
-    </Layout>
-  }
-/>
+        path="/paper-usage"
+        element={
+          <Layout>
+            <PaperUsage />
+          </Layout>
+        }
+      />
+
+      {/* GREEN ROOMS */}
       <Route
-  path="/green-rooms"
-  element={
-    <Layout>
-      <GreenRooms />
-    </Layout>
-  }
-/>
+        path="/green-rooms"
+        element={
+          <Layout>
+            <GreenRooms />
+          </Layout>
+        }
+      />
 
       {/* SMS ALERTS */}
       <Route
-  path="/sms-alerts"
-  element={
-    <Layout>
-      <SMSAlerts />
-    </Layout>
-  }
-/>
+        path="/sms-alerts"
+        element={
+          <Layout>
+            <SMSAlerts />
+          </Layout>
+        }
+      />
 
       {/* ESG REPORTS */}
       <Route
-  path="/esg-reports"
-  element={
-    <Layout>
-      <ESGReports />
-    </Layout>
-  }
-/>
+        path="/esg-reports"
+        element={
+          <Layout>
+            <ESGReports />
+          </Layout>
+        }
+      />
 
       {/* ADMIN */}
-     {/* ADMIN */}
-<Route
-  path="/admin"
-  element={
-    <Layout>
-      <Admin />
-    </Layout>
-  }
-/>
+      <Route
+        path="/admin"
+        element={
+          <Layout>
+            <Admin />
+          </Layout>
+        }
+      />
 
       {/* FALLBACK */}
       <Route
